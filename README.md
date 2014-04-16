@@ -31,21 +31,21 @@ Parameters that can be tuned: <br />
     `sigma`: Used to smooth the input image before segmenting it (0.1) <br />
     `k`: Value for the threshold function (100) <br /> 
     `min`: Minimum component size enforced by post-processing (5) 
-    util.cpp/linking parameters:
-     * search radius around the center: 0.05
-     * overlap_ratio threshold to establish linking: 0.0f
-    trackRigid.cpp/tracker parmaeters:
-     * icp max iteration number: 2000
-     * search radius around each point of transformed cloud: 0.03
-     * color threshold for match points between previous and current frame cloud: 6.0f
-    pcd_cloud.cpp/region_grow color threshhold:
-     * point neighboring: 6
-     * region merging: 5
-    extract_sec.cpp/segmentation threshold: (smalled cluster size)
-     * initialSeg threshold: 100
-     * tableObjSeg threshold: 10
-    table_obj_seg.cpp/
-     * threshold for finding plane: 0.01
+    util.cpp/linking parameters: <br /> 
+     * search radius around the center: 0.05 <br /> 
+     * overlap_ratio threshold to establish linking: 0.0f <br /> 
+    trackRigid.cpp/tracker parmaeters: <br /> 
+     * icp max iteration number: 2000 <br /> 
+     * search radius around each point of transformed cloud: 0.03 <br /> 
+     * color threshold for match points between previous and current frame cloud: 6.0f <br /> 
+    pcd_cloud.cpp/region_grow color threshhold: <br /> 
+     * point neighboring: 6 <br /> 
+     * region merging: 5 <br /> 
+    extract_sec.cpp/segmentation threshold: (smalled cluster size) <br /> 
+     * initialSeg threshold: 100 <br /> 
+     * tableObjSeg threshold: 10 <br /> 
+    table_obj_seg.cpp/ <br /> 
+     * threshold for finding plane: 0.01 <br /> 
 
 #Troubleshooting
 1. Complain about opencv2/flann, try directly build the project in terminal instead of using Kdevelop
