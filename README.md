@@ -31,7 +31,6 @@ Parameters that can be tuned: <br />
     `sigma`: Used to smooth the input image before segmenting it (0.1) <br />
     `k`: Value for the threshold function (100) <br /> 
     `min`: Minimum component size enforced by post-processing (5) 
-    
     util.cpp/linking parameters:
      * search radius around the center: 0.05
      * overlap_ratio threshold to establish linking: 0.0f
