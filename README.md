@@ -22,20 +22,20 @@ SEC
     Test results are stored in `mri_results/test_results`
 
 #Parameters
-util.cpp/linking parameters: <br /> 
+ * util.cpp/linking parameters: <br /> 
 `search radius around the center`: 0.05 <br /> 
 `overlap_ratio threshold to establish linking`: 0.0f <br /> 
-trackRigid.cpp/tracker parmaeters: <br /> 
+ * trackRigid.cpp/tracker parmaeters: <br /> 
 `icp max iteration number`: 2000 <br /> 
 `search radius around each point of transformed cloud`: 0.03 <br /> 
 `olor threshold for match points between previous and current frame cloud`: 6.0f <br /> 
-pcd_cloud.cpp/region_grow color threshhold: <br /> 
+ * pcd_cloud.cpp/region_grow color threshhold: <br /> 
 `point neighboring`: 6 <br /> 
 `region merging`: 5 <br /> 
-extract_sec.cpp/segmentation threshold: (smalled cluster size) <br /> 
+ * extract_sec.cpp/segmentation threshold: (smalled cluster size) <br /> 
 `initialSeg threshold`: 100 <br /> 
 `tableObjSeg threshold`: 10 <br /> 
-table_obj_seg.cpp/ <br /> 
+ * table_obj_seg.cpp/ <br /> 
 `threshold for finding plane`: 0.01 <br /> 
 
 #Troubleshooting
