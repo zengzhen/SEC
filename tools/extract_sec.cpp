@@ -1,39 +1,7 @@
-#include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
-
-#include <pcl/io/pcd_io.h>
-#include <pcl/io/openni_grabber.h>
-
-#include <pcl/console/parse.h>
-
-#include <pcl/common/time.h>
-#include <pcl/common/centroid.h>
-#include <pcl/common/distances.h>
-#include <pcl/common/transforms.h>
-
-#include <pcl/kdtree/kdtree_flann.h>
-
-#include <pcl/search/pcl_search.h>
-
-#include <pcl/visualization/cloud_viewer.h>
-#include <pcl/visualization/pcl_visualizer.h>
-
-
-#include <pcl/filters/passthrough.h>
-#include <pcl/filters/voxel_grid.h>
-#include <pcl/filters/approximate_voxel_grid.h>
-
-#include <pcl/sample_consensus/method_types.h>
-#include <pcl/sample_consensus/model_types.h>
-
-#include <pcl/registration/icp.h>
-#include <pcl/registration/eigen.h>
-
-#include <boost/format.hpp>
-#include <boost/filesystem.hpp>
-
-#include <pcl/filters/conditional_removal.h>
-#include <pcl/filters/passthrough.h>
+/**
+ * \file        extract_sec.cpp
+ * \author      Zhen Zeng (zengzhen@umich.edu) 
+ */
 
 #include "TableObjectSegmentation/table_obj_seg.h"
 #include "TableObjectSegmentation/pcd_cloud.h"
@@ -43,7 +11,6 @@
 #include "util/util.h"
 #include "Detector/colorDetector.h"
 #include "Detector/touchDetector.h"
-
 #include "SEC/mainGraph.h"
 
 bool VERBOSE = false;
