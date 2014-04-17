@@ -15,7 +15,10 @@ SEC
    
    
 2. To browse the corresponding 2D image sequences for a pre-recorded kinect video, first use the kinect toolbox we developed,
-	
+
+        >> cd KINECT_TOOLBOX_PATH/bin
+        >> ./Convert_PCD_video_RGBDs --cloud DATA_PATH/PCD_FILE_FORMAT --depth DATA_PATH/DEPTH_FILE_FORMAT --image DATA_PATH/IMAGE_FILE_FORMAT
+
 	>> cd KINECT_TOOLBOX_PATH/bin
 	>> ./Convert_PCD_video_RGBDs --cloud DATA_PATH/PCD_FILE_FORMAT --depth DATA_PATH/DEPTH_FILE_FORMAT --image DATA_PATH/IMAGE_FILE_FORMAT
    eg.
