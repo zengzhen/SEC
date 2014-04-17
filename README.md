@@ -6,8 +6,7 @@ SEC
 #Usage
 1. Run sec extractions on a pre-recorded kinect video,
 
-        >> cd build
-	>>  DATA_PATH/PCD_FILE_FORMAT START_INDEX END_INDEX DEMO_NAME (opt)STEP_SIZE(1)
+        >> DATA_PATH/PCD_FILE_FORMAT START_INDEX END_INDEX DEMO_NAME (opt)STEP_SIZE(1)
 	
    eg.
    
