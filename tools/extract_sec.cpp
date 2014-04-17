@@ -13,6 +13,8 @@
 #include "Detector/touchDetector.h"
 #include "SEC/mainGraph.h"
 
+#include <sys/stat.h>
+
 bool VERBOSE = false;
 bool DEBUG = false;
 bool DEBUG_COLOR = false;
@@ -28,23 +30,57 @@ main (int argc, char** argv)
     //clipDistance  / pos x, y, z              / view x, y, z            / up x, y, z                  / fovy   /win_size/win_pos
     //0.0136198,13.6198/-0.443141,0.0788583,-0.502855/-0.504623,0.0647437,-0.758519/0.00533475,-0.998535,0.0538437/0.523599/800,450/425,277
     
+    /***************************************
+    *  parse arguments
+    ***************************************/
+    if(argc<5)
+    {
+        std::cerr << "Usage: extract_sec DATA_PATH/PCD_FILE_FORMAT START_INDEX END_INDEX DEMO_NAME (opt)STEP_SIZE(1)" << std::endl;
+        exit(1);
+    }
+    
+    int view_id=-1;
+    int step=1;
     std::string basename_cloud=argv[1];
     unsigned int index_start = std::atoi(argv[2]);
     unsigned int index_end = std::atoi(argv[3]);
-    int view_id=-1;
-    if(argc>4) view_id=std::atoi(argv[4]);
-    if(argc>5) VERBOSE = (bool)argv[5];
+    std::string demo_name=argv[4];
+    if(argc>5) step=std::atoi(argv[5]);
+//     if(argc>4) view_id=std::atoi(argv[4]);
+//     if(argc>5) VERBOSE = (bool)argv[5];
+    
+    /***************************************
+    *  set up result directory
+    ***************************************/
+    mkdir("../../../result", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    char result_folder[50];
+    std::snprintf(result_folder, sizeof(result_folder), "../../../result/%s", demo_name.c_str());
+    mkdir(result_folder, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     
     std::string basename_pcd = (basename_cloud.find(".pcd") == std::string::npos) ? (basename_cloud + ".pcd") : basename_cloud;
     std::string filename_pcd;
     
-    boost::filesystem::path p(basename_cloud);
-    boost::filesystem::path dir=p.parent_path();
-    std::string mainGraph_file = dir.string();
-    mainGraph_file = mainGraph_file + "mainGraph.txt";
+//     boost::filesystem::path p(basename_cloud);
+//     boost::filesystem::path dir=p.parent_path();
+//     std::string mainGraph_file = dir.string();
+//     mainGraph_file = mainGraph_file + "mainGraph.txt";
     
-    unsigned int idx = index_start;
+    std::string mainGraph_file;
+    mainGraph_file = "../../../result/" + demo_name + "/mainGraph.txt";
     
+    char video_file[50];
+    std::snprintf(video_file, sizeof(video_file), "../../../result/%s/video.txt", demo_name.c_str());
+    std::ofstream video_config(video_file);
+    if (video_config.is_open())
+    {
+        video_config << index_start << " " << index_end << " " << demo_name << " " << step;
+        video_config.close();
+    }
+    
+    
+    /***************************************
+    *  set up segmentation, detectors, graph
+    ***************************************/
     TableObject::Segmentation tableObjSeg;
     TableObject::Segmentation initialSeg;
     TableObject::trackRigid tracker;
@@ -75,8 +111,12 @@ main (int argc, char** argv)
     pcl::PointIndices f2_indices;
     pcl::PointIndices object_indices;
     
+    
+    /***************************************
+    *  start processing
+    ***************************************/
+    unsigned int idx = index_start;
     int video_id=0;
-
     while( idx <= index_end && !result_viewer.wasStopped())
     { 
         std::cout << std::endl;
@@ -150,7 +190,7 @@ main (int argc, char** argv)
                 
                     // touch detection between object_i and object_j
                     char relation [50];
-                    sprintf(relation, "object%d_object%d", i, j);
+                    std::sprintf(relation, "object%d_object%d", i, j);
                     std::cout << relation << std::endl;
                     touch=touchDetector.detect(object_i, object_j);
                     touchDetector.showTouch(result_viewer, relation, 100+250*(j-i-1), 40+20*i);
@@ -165,7 +205,7 @@ main (int argc, char** argv)
                 
                 // touch detection between each objects and tabletop
                 char relation [50];
-                sprintf (relation, "object%d_object%d", i, (int)touch_clusters.size());
+                std::sprintf (relation, "object%d_object%d", i, (int)touch_clusters.size());
                 std::cout << relation << std::endl;
                 touch=touchDetector.detectTableTouch(object_i, coefficients);
                 touchDetector.showTouch(result_viewer, relation, 100+250*(j-i-1), 40+20*i);
@@ -255,7 +295,7 @@ main (int argc, char** argv)
                 
                     // touch detection between object_i and object_j
                     char relation [50];
-                    sprintf(relation, "object%d_object%d", i, j);
+                    std::sprintf(relation, "object%d_object%d", i, j);
                     std::cout << relation << std::endl;
                     touch=touchDetector.detect(object_i, object_j);
                     touchDetector.showTouch(result_viewer, relation, 100+250*(j-i-1), 40+20*i);
@@ -270,7 +310,7 @@ main (int argc, char** argv)
                 
                 // touch detection between each objects and tabletop
                 char relation [50];
-                sprintf (relation, "object%d_object%d", i, (int)touch_clusters.size());
+                std::sprintf (relation, "object%d_object%d", i, (int)touch_clusters.size());
                 std::cout << relation << std::endl;
                 touch=touchDetector.detectTableTouch(object_i, coefficients);
                 touchDetector.showTouch(result_viewer, relation, 100+250*(j-i-1), 40+20*i);
@@ -304,17 +344,16 @@ main (int argc, char** argv)
         boost::this_thread::sleep (boost::posix_time::microseconds (100000));
         
         char screenshot[50]; // make sure it's big enough
-        snprintf(screenshot, sizeof(screenshot), "result/demo10/original/sec_%d.png", (int)video_id);
+        std::snprintf(screenshot, sizeof(screenshot), "../../../result/%s/sec_%d.png", demo_name.c_str(), (int)video_id);
         std::cout << screenshot << std::endl;
         result_viewer.saveScreenshot(screenshot);
         
-        idx=idx+3;
+        idx=idx+step;
         video_id=video_id+1;
     }
     
     mainGraph.displayMainGraph();
     mainGraph.recordMainGraph(mainGraph_file);
-    
     
     
     while (!result_viewer.wasStopped ())

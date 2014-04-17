@@ -144,7 +144,7 @@ namespace TableObject{
         objectsPcdCloud.filterNoise();
         objectsPcdCloud.regionGrow(false);
         objectsPcdCloud.getThresholdedClusters(_clusters, _threshold);
-        prune();
+//         prune();
         
         std::sort(_clusters.begin(), _clusters.end(), compareClusterSize);
         

@@ -12,3 +12,4 @@ add_definitions(${PCL_DEFINITIONS})
 link_directories(${PCL_LIBRARIES}  ${OpenCV_LIBS})
 
 add_library(mainGraph mainGraph.cpp)
+add_library(eventChain eventChain.cpp)

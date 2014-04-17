@@ -78,14 +78,35 @@ namespace TableObject{
         std::cout << std::endl;
     }
 
+//     void mainGraph::recordMainGraph(std::string file_name)
+//     {
+//         std::ofstream mainGraph_file(file_name.c_str());
+//         for(int i=0; i<_graph.size(); i++)
+//         {
+//             for(int j=0; j<_graph[i].relational_graph.size(); j++)
+//             {
+//                 mainGraph_file << _graph[i].relational_graph[j] << " ";
+//             }
+//             mainGraph_file << std::endl;
+//         }
+//         mainGraph_file.close();
+//         std::cout << "main graph saved at " << file_name << std::endl;
+//     }
+    
+        /**
+     *  mainGraph_file.txt:
+     *       row: relation between object i and object j from frame N1 to frame N2
+     *       col: different object pairs
+     */
+    
     void mainGraph::recordMainGraph(std::string file_name)
     {
         std::ofstream mainGraph_file(file_name.c_str());
-        for(int i=0; i<_graph.size(); i++)
+        for(int i=0; i<_graph[0].relational_graph.size(); i++)
         {
-            for(int j=0; j<_graph[i].relational_graph.size(); j++)
+            for(int j=0; j<_graph.size(); j++)
             {
-                mainGraph_file << _graph[i].relational_graph[j] << " ";
+                mainGraph_file << _graph[j].relational_graph[i] << " ";
             }
             mainGraph_file << std::endl;
         }

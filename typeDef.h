@@ -27,6 +27,12 @@ struct graph{
     int video_index;
 };
 
+struct sec{
+    int row;
+    std::vector<int> cols;
+    std::vector<std::vector<const char*>> event_chain;
+};
+
 typedef std::vector<linker> linkerList;
 
 extern bool VERBOSE;
