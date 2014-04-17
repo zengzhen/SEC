@@ -19,11 +19,9 @@ SEC
         >> cd KINECT_TOOLBOX_PATH/bin
         >> ./Convert_PCD_video_RGBDs --cloud DATA_PATH/PCD_FILE_FORMAT --depth DATA_PATH/DEPTH_FILE_FORMAT --image DATA_PATH/IMAGE_FILE_FORMAT
 
-	>> cd KINECT_TOOLBOX_PATH/bin
-	>> ./Convert_PCD_video_RGBDs --cloud DATA_PATH/PCD_FILE_FORMAT --depth DATA_PATH/DEPTH_FILE_FORMAT --image DATA_PATH/IMAGE_FILE_FORMAT
    eg.
 
-	>> ./Convert_PCD_video_RGBDs --cloud ~/Documents/zhen_data/qualManipulation/demo10/pcd/cld%05d.pcd --depth ~/Documents/zhen_data/qualManipulation/demo10/depth/depth%05d.png --image ~/Documents/zhen_data/qualManipulation/demo10/rgb/image%05d.png
+        >> ./Convert_PCD_video_RGBDs --cloud ~/Documents/zhen_data/qualManipulation/demo10/pcd/cld%05d.pcd --depth ~/Documents/zhen_data/qualManipulation/demo10/depth/depth%05d.png --image ~/Documents/zhen_data/qualManipulation/demo10/rgb/image%05d.png
 
 #Parameters
  * util.cpp/linking parameters: <br /> 
