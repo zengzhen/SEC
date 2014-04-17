@@ -4,22 +4,22 @@ SEC
  * Learn manipulation action for recognition tasks.
 
 #Usage
-1. In Matlab, navigate to `EECS556/code`; Run
+1. Run sec extractions on a pre-recorded kinect video,
 
-        >> addpath(genpath(‘.’))
-2. Manually unzip  the `ModelNumber_TissueType.mnc.gz` into `Brainweb_MRIDatabase/WebDownloads`, then run
+	>> ./extract_sec DATA_PATH/PCD_FILE_FORMAT START_INDEX END_INDEX DEMO_NAME (opt)STEP_SIZE(1)
+   eg.
+   
+   	>> ./extract_sec ~/Documents/zhen_data/qualManipulation/demo10/pcd/cld%05d.pcd 75 115 demo10 3
+   extracted main graph and video process config are stored in `SEC/result/DEMO_NAME/`
+   
+   
+2. To browse the corresponding 2D image sequences for a pre-recorded kinect video, first use the kinect toolbox we developed,
+	
+	>> cd KINECT_TOOLBOX_PATH/bin
+	>> ./Convert_PCD_video_RGBDs --cloud DATA_PATH/PCD_FILE_FORMAT --depth DATA_PATH/DEPTH_FILE_FORMAT --image DATA_PATH/IMAGE_FILE_FORMAT
+   eg.
 
-        >> get_data_ready
- which will automatically generate original images in .ppm format, and ground truth labels `train_data.mat` in folder `Brainweb_MRIDatabase/Images`. <br />
-3.  Run 
-
-        >> mriTrain
-    classifiers are learned and stored in `mri_results/train_results`
-4. run 
-
-        >> mriTestScript
-    test images will be loaded and labeld based on learned classifiers. <br />
-    Test results are stored in `mri_results/test_results`
+	>> ./Convert_PCD_video_RGBDs --cloud ~/Documents/zhen_data/qualManipulation/demo10/pcd/cld%05d.pcd --depth ~/Documents/zhen_data/qualManipulation/demo10/depth/depth%05d.png --image ~/Documents/zhen_data/qualManipulation/demo10/rgb/image%05d.png
 
 #Parameters
  * util.cpp/linking parameters: <br /> 
