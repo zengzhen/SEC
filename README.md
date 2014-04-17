@@ -6,8 +6,7 @@ SEC
 #Usage
 1. Run sec extractions on a pre-recorded kinect video,
 
-        >> DATA_PATH/PCD_FILE_FORMAT START_INDEX END_INDEX DEMO_NAME (opt)STEP_SIZE(1)
-	
+        >> ./extract_sec DATA_PATH/PCD_FILE_FORMAT START_INDEX END_INDEX DEMO_NAME (opt)STEP_SIZE(1)
    eg.
    
    	>> ./extract_sec ~/Documents/zhen_data/qualManipulation/demo10/pcd/cld%05d.pcd 75 115 demo10 3
