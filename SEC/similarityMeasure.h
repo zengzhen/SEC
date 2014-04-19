@@ -56,8 +56,9 @@ namespace TableObject{
         /** \brief calculate max(similarity(shifted version of short string array, another long string array) )
          *  \param[in] row1 1st string array
          *  \param[in] row2 2nd string array
+         *  \param[in] option spatial or temporal similarity
         */
-        float subString(std::vector<std::string> row1, std::vector<std::string> row2);
+        float subString(std::vector<std::string> row1, std::vector<std::string> row2, const char* option);
         
         /** \brief recursive function to find all possible permutations of rows of compressed sec1 to match compressed_sec2
          *  \param[in] match_map row_i of compressed_sec1 is the same with row_match_map[i][j] of compressed_sec2
@@ -65,6 +66,12 @@ namespace TableObject{
          *                           in ith permutation, row_j of compressed_sec1 is assigned to row_permutations[i][j] of compressed_sec2
         */
         void permute(std::vector<std::vector<int>> match_map, std::vector<std::vector<int>>& permutations, std::vector<int> temp_permutation);
+        
+        /** \brief find longest similar subsequence using dynamic programming
+         *  \param[out] lss_length the length of the longest similar subsequence
+         *  \param[out] b back pointers for extracting longest similar subsequence
+        */
+        void lss(int lss_length, std::vector<std::vector<std::string>>& b);
     };
 }
 

@@ -39,7 +39,7 @@ namespace TableObject{
             std::cout << "ss[" << i << "][:] = ";
             for(int j=0; j<comSec2.row; j++)
             {
-                float ss_ij = subString(comSec1.event_chain[i], comSec2.event_chain[j]);
+                float ss_ij = subString(comSec1.event_chain[i], comSec2.event_chain[j], "spatial");
                 if(ss_ij > ss_i) ss_i = ss_ij;
                 ss_i_vector.push_back(ss_ij);
             }
@@ -53,6 +53,8 @@ namespace TableObject{
         ss = ss / comSec1.row;
         std::cout << std::endl;
         std::cout << "spatial simlarity = " << ss << std::endl;
+        
+        return ss;
     }
 
     float similarityMeasure::temporalSimilarity()
@@ -201,8 +203,11 @@ namespace TableObject{
         
          // for each permutation, find the similarity matrix
          // permutated_derSec1_seq vs permutated_derSec2_seq
+        float best_ts = 0;
         for(int p=0; p<permutation.size(); p++)
         {
+            _ts.clear();
+            
             std::cout << "permutation " << p << ":" << std::endl;
             sec newDerSec1, newDerSec2;
             if(derSec1.row <= derSec2.row) 
@@ -214,8 +219,6 @@ namespace TableObject{
                 newDerSec2 = permutated_derSec2_seq[0];
             }
             
-            std::vector<std::vector<float>> similarity_matrix;
-            float ts = 0;
             for(int i=0; i<newDerSec1.cols[0]; i++)
             {
                 float ts_i = 0;
@@ -230,25 +233,71 @@ namespace TableObject{
                     for(int row_i=0; row_i<newDerSec2.row; row_i++) col2.push_back(newDerSec2.event_chain[row_i][j]);
                     
                     // calculate the similarity between col1 and col2
-                    float ts_ij = subString( col1, col2 );
+                    float ts_ij = subString( col1, col2, "temporal");
                     if(ts_ij > ts_i) ts_i = ts_ij;
                     ts_i_vector.push_back(ts_ij);
                 }
                 std:: cout << "max_f = " << ts_i << std::endl; 
                 
-                ts = ts + ts_i;
                 _ts.push_back(ts_i_vector);
             }
             
-            // calculate total temporal similarity
-            ts = ts / newDerSec1.cols[0];
-            std::cout << std::endl;
-            std::cout << "temporal simlarity = " << ts << std::endl;
+            // find the longest similar subsequence given the temporal similarity matrix _ts
+            int lss_length;
+            std::vector<std::vector<std::string>> back_pointers;
+            lss(lss_length, back_pointers);
+            
+            // extract the lss
+            float ts = 0;
+            std::vector<std::vector<int>> LSS;
+            int i=_ts.size(), j=_ts[0].size();
+            while(i!=0 & j!=0)
+            {
+                if(std::strcmp(back_pointers[i][j].c_str(), "addxy")==0)
+                {
+                    std::vector<int> LSS_row;
+                    LSS_row.push_back(i-1); LSS_row.push_back(j-1);
+                    LSS.push_back(LSS_row);
+                    
+                    ts = ts + _ts[i-1][j-1];
+                    
+                    i--; j--;
+                }else if(std::strcmp(back_pointers[i][j].c_str(), "skipx")==0){
+                    i--;
+                }else if(std::strcmp(back_pointers[i][j].c_str(), "skipy")==0){
+                    j--;
+                }
+            }
+            
+//             // display back pointers
+//             for(int i=0; i<=_ts.size(); i++)
+//             {
+//                 for(int j=0; j<=_ts[0].size(); j++)
+//                 {
+//                     std::cout << back_pointers[i][j].c_str() << " ";
+//                 }
+//                 std::cout << std::endl;
+//             }
+//             
+//             // display LSS
+//             for(int i=0; i<LSS.size(); i++){
+//                 for(int j=0; j<LSS[i].size(); j++) {
+//                     std::cout << LSS[i][j] << " ";
+//                 }
+//                 std::cout << std::endl;
+//             }
+            
+            // calculate mean temporal similarity
+            ts = ts / LSS.size();
+            if( ts > best_ts) best_ts = ts;
+            std::cout << "lss temporal simlarity = " << ts << std::endl;
         }
-        return 0;
+        
+        std::cout << "best temporal similarity = " << best_ts << std::endl;
+        return best_ts;
     }
     
-    float similarityMeasure::subString(std::vector< std::string> row1, std::vector< std::string> row2)
+    float similarityMeasure::subString(std::vector< std::string> row1, std::vector< std::string> row2, const char* option)
     {
         int length1 = row1.size();
         int length2 = row2.size();
@@ -276,12 +325,24 @@ namespace TableObject{
             if(f_shift[i] > f) f = f_shift[i];
         }
         std::cout << f;
-        if(f >= _spatial_threshold)
+        if(std::strcmp(option, "spatial")==0)
         {
-            f=100;
-            std::cout << "->" << f << " ";
-        }else{
-            std::cout << " ";
+            if(f >= _spatial_threshold)
+            {
+                f=100;
+                std::cout << "->" << f << " ";
+            }else{
+                std::cout << " ";
+            }
+        }else if(std::strcmp(option, "temporal")==0)
+        {
+            if(f >= _temporal_threshold)
+            {
+                f=100;
+                std::cout << "->" << f << " ";
+            }else{
+                std::cout << " ";
+            }
         }
         
         return f;
@@ -376,6 +437,53 @@ namespace TableObject{
             }
             
         }
+    }
+    
+    void similarityMeasure::lss(int lss_length, std::vector< std::vector< std::string > >& b)
+    {
+        std::vector<std::vector<int>> c;
+       
+        // initialization
+        for(int i=0; i<=_ts.size(); i++)
+        {
+            std::vector<int> c_row(_ts[0].size()+1);
+            c.push_back(c_row);
+            
+            std::vector<std::string> b_row(_ts[0].size()+1);
+            b.push_back(b_row);
+        }
+        for(int i=0; i<=_ts.size(); i++)
+        {
+            c[i][0]=0;
+            b[i][0]=std::string("skipx");
+        }
+        for(int j=0; j<=_ts[0].size(); j++)
+        {
+            c[0][j]=0;
+            b[0][j]=std::string("skipy");
+        }
+        
+        // count for length of lss, and store the back pointers in b
+        for(int i=1; i<=_ts.size(); i++)
+        {
+            for(int j=1; j<=_ts[0].size(); j++)
+            {
+                if(_ts[i-1][j-1]==100)
+                {
+                    c[i][j]=c[i-1][j-1]+1;
+                    b[i][j]=std::string("addxy");
+                }else if(c[i-1][j] >= c[i][j-1]){
+                    c[i][j]=c[i-1][j];
+                    b[i][j]=std::string("skipx");
+                }else{
+                    c[i][j]=c[i][j-1];
+                    b[i][j]=std::string("skipy");
+                }
+            }
+        }
+        
+        lss_length = c[_ts.size()][_ts[0].size()];
+        std::cout << "longest similar subsequence length = " << lss_length << std::endl;
     }
 
 }
