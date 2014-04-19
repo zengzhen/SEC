@@ -43,6 +43,8 @@ int main(int argc, char** argv)
     TableObject::similarityMeasure sm(event_chain1, event_chain2);
     sm.setSpatialThreshold(0.8f);
     sm.spatialSimilarity();
+    sm.setTemporalThreshold(0.8f);
+    sm.temporalSimilarity();
     
     return 0;
 }
