@@ -10,6 +10,10 @@
 #include <pcl/point_cloud.h>
 #include <pcl/tracking/particle_filter.h>
 
+extern bool VERBOSE;
+extern bool DEBUG;
+extern bool DEBUG_COLOR;
+
 typedef pcl::PointXYZRGBA RefPointType;
 typedef pcl::tracking::ParticleXYZRPY ParticleT;
 typedef pcl::tracking::ParticleFilterTracker<RefPointType, ParticleT> ParticleFilter;
@@ -21,6 +25,7 @@ struct linker{
     std::vector<int> link_index;
     std::vector<float> overlap_ratio;
 };
+typedef std::vector<linker> linkerList;
 
 struct graph{
     std::vector<int> relational_graph;
@@ -30,33 +35,22 @@ struct graph{
 struct sec{
     int row;
     std::vector<int> cols;
-    std::vector<std::vector<const char*>> event_chain;
+    std::vector<std::vector<std::string>> event_chain;
+    
+    void display()
+    {
+        std::cout << "semantic event chain : " << std::endl;
+        std::cout << "row: " << row << std::endl;
+        for(int i=0; i<row; i++)
+        {
+            for(int j=0; j<cols[i]; j++)
+            {
+                std::string test = event_chain[i][j];
+                std::cout << event_chain[i][j].c_str() << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
 };
-
-typedef std::vector<linker> linkerList;
-
-extern bool VERBOSE;
-
-extern bool DEBUG;
-
-extern bool DEBUG_COLOR;
-
-/* Tracking Parameters
- */
-// util.cpp: linking parameters: [1] search radius around the center; [2] overlap_ratio threshold to establish linking
-// trackRigid.cpp: tracker parmaeters: [3] icp max iteration number; [4] search radius around each point of transformed cloud; [5] color threshold for match points between previous and current frame cloud; 
-// pcd_cloud.cpp: region_grow color threshhold ([6] point neighboring and [7] region merging)
-// planar_segmentation.cpp: [8] tableObjSeg threshold; [9] initialSeg threshold
-// table_obj_seg.cpp: [10] threshold for findplane
-// [1] 0.05
-// [2] 0.0f
-// [3] 2000
-// [4] 0.03
-// [5] 6.0f
-// [6] 6
-// [7] 5
-// [8] 10
-// [9] 100
-// [10] 0.01
 
 #endif  // TYPEDEF

@@ -22,7 +22,7 @@ namespace TableObject{
         /** \brief Constructor
         *   \param[in] mainGraph_file file to be load to read out main graph
         */
-        eventChain(std::string mainGraph_file);
+        eventChain(std::string& mainGraph_file);
         
         /** \brief take derivative of the eventChain (rowwise)
          *  \brief remvoe rows where nothing ever happens
@@ -33,6 +33,23 @@ namespace TableObject{
          *  \brief all '00', '22' are removed
         */
         void compress();
+        
+        /** \brief Accessor
+         *  \param[in] derivative_sec
+        */
+        void getDerivativeSec(sec& derivative_sec);
+        
+        /** \brief Accessor
+         *  \param[in] compressed_sec
+        */
+        void getCompressedSec(sec& compressed_sec);
+        
+        /** \brief display event chains
+         *  \param[in] sec_type the type of the event chain to be displayed ("all","original","derivative","compressed")
+        */
+        void display(const char* sec_type);
+        
+        
     
     private:
         sec _original_sec;

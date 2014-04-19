@@ -17,7 +17,7 @@ find_package(OpenCV REQUIRED)
 
 include_directories(${PCL_INCLUDE_DIRS} 
                     ${OpenCV_INCLUDE_DIRS}
-                    /home/zengzhen/Documents/
+                    /home/zhen/Documents/
                     ${PROJECT_SOURCE_DIR})
 add_definitions(${PCL_DEFINITIONS})
 

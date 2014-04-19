@@ -6,7 +6,7 @@ find_package(PCL 1.7 REQUIRED)
 include_directories(${PCL_INCLUDE_DIRS}  
                     ${OpenCV_INCLUDE_DIRS} 
                     ${PROJECT_SOURCE_DIR}
-                    /home/zengzhen/Documents) 
+                    /home/zhen/Documents) 
 add_definitions(${PCL_DEFINITIONS})
 link_directories(${PCL_LIBRARIES}  ${OpenCV_LIBS})
 
@@ -14,7 +14,7 @@ add_executable (extract_sec extract_sec.cpp)
 target_link_libraries (extract_sec 
                        ${PCL_LIBRARIES} 
                        ${OpenCV_LIBS}
-                       /home/zengzhen/Documents/Kinect/lib/libconvert_rgbd_to_image.so
+                       /home/zhen/Documents/Kinect/lib/libconvert_rgbd_to_image.so
                        table_obj_seg
                        pcd_cloud
                        trackRigid
@@ -25,3 +25,13 @@ target_link_libraries (extract_sec
                        touchDetecor
                        moveDetector
                        mainGraph)
+
+                       
+add_executable (testEventChain testEventChain.cpp)
+target_link_libraries (testEventChain 
+                       eventChain)
+                       
+add_executable (testSimilarityMeasure testSimilarityMeasure.cpp)
+target_link_libraries (testSimilarityMeasure
+                       similarityMeasure
+                       eventChain)
