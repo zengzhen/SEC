@@ -8,6 +8,7 @@
 #define UTIL_H
 
 #include "typeDef.h"
+#include <Eigen/StdVector>
 
 namespace TableObject{
     
@@ -16,7 +17,7 @@ namespace TableObject{
     *  \param[in] clusters vector of cluster point indices
     *  \param[out centroid computed centroids
     */
-    void computeObjCentroid(CloudPtr cloud, std::vector<pcl::PointIndices> clusters, std::vector<Eigen::Vector4f>& centroid);
+    void computeObjCentroid(CloudPtr cloud, std::vector<pcl::PointIndices> clusters, std::vector<Eigen::Vector4f,Eigen::aligned_allocator<Eigen::Vector4f> >& centroid);
 
 	/** \brief compute vector of centroids for cloud clusters
     *  \param[in] cloud cloud data

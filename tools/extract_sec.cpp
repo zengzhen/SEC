@@ -156,12 +156,19 @@ main (int argc, char** argv)
 //             cupDetector.filter(object_indices, cloud_block);
 //             cupDetector.showDetectedCloud(result_viewer, "block");
             
-            // remove hand (include cluster that contain the detected fingertips and also the other clusters that are touching the cluster)
-            std::vector<int> hand_arm=TableObject::findHand(cloud_objects, clusters, f1_indices);
-            for(int i=hand_arm.size()-1; i>=0; i--)
+            // remove hand (include cluster that contains the detected fingertips and also the other clusters that are touching the cluster)
+            std::vector<int> hand_arm1=TableObject::findHand(cloud_objects, clusters, f1_indices);
+            
+            for(int i=hand_arm1.size()-1; i>=0; i--)
             {
-                clusters.erase(clusters.begin()+hand_arm[i]);
-                std::cout << "removing hand_arm : cluster index = " << hand_arm[i] << std::endl;
+                clusters.erase(clusters.begin()+hand_arm1[i]);
+                std::cout << "removing hand_arm : cluster index = " << hand_arm1[i] << std::endl;
+            }
+            std::vector<int> hand_arm2=TableObject::findHand(cloud_objects, clusters, f2_indices);
+            for(int i=hand_arm2.size()-1; i>=0; i--)
+            {
+                clusters.erase(clusters.begin()+hand_arm2[i]);
+                std::cout << "removing hand_arm : cluster index = " << hand_arm2[i] << std::endl;
             }
             
             /***************************************
@@ -227,7 +234,7 @@ main (int argc, char** argv)
 //             result_viewer.addPointCloud<RefPointType>(sceneCloud, rgb, "new frame");
             
             // draw extracted object clusters
-//             TableObject::view3D::drawClusters(result_viewer, cloud_objects, touch_clusters);  
+            TableObject::view3D::drawClusters(result_viewer, cloud_objects, touch_clusters);  
 
             // draw extracted plane points
 //             pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGBA> plane(planeCloud);

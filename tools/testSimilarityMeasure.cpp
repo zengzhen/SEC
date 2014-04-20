@@ -41,10 +41,12 @@ int main(int argc, char** argv)
     std::cout << std::endl;
     
     TableObject::similarityMeasure sm(event_chain1, event_chain2);
+    std::vector<int> add_row_index_sec2;
+    std::vector<int> matched_row_index_sec1;
     sm.setSpatialThreshold(0.8f);
     sm.spatialSimilarity();
     sm.setTemporalThreshold(0.8f);
-    sm.temporalSimilarity();
+    sm.temporalSimilarity(add_row_index_sec2, matched_row_index_sec1);
     
     return 0;
 }

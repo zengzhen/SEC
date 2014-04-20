@@ -57,7 +57,7 @@ namespace TableObject{
         return ss;
     }
 
-    float similarityMeasure::temporalSimilarity()
+    float similarityMeasure::temporalSimilarity(std::vector<int>& add_row_index_sec2, std::vector<int>& matched_row_index_sec1)
     {
         sec derSec1, derSec2;
         _sec1.getDerivativeSec(derSec1);
@@ -79,11 +79,35 @@ namespace TableObject{
                     if(_ss[i][j]>similarity) similarity = _ss[i][j];
                 }
                 // find all the best matches for each row of sec1
-                for(int j=0; j<derSec2.row; j++)
+                if(similarity != 100)
                 {
-                    if(_ss[i][j]==similarity) match_idx.push_back(j);
+                    match_idx.push_back(-1);
+                }else{
+//                     matched_row_index_sec1.push_back(i);
+                    for(int j=0; j<derSec2.row; j++)
+                    {
+                        if(_ss[i][j]==similarity)
+                        {
+                            match_idx.push_back(j);
+                        }
+                    }
                 }
                 match_map.push_back(match_idx);
+            }
+            
+            for(int i=0; i<derSec2.row; i++)
+            {
+                float similarity = 0;
+                // find the best match similarity for each row of sec2
+                for(int j=0; j<derSec1.row; j++)
+                {
+                    if(_ss[j][i]>similarity) similarity = _ss[j][i];
+                }
+                // find all the best matches for each row of sec1
+                if(similarity != 100)
+                {
+                    add_row_index_sec2.push_back(i);
+                }
             }
         }else{
             // match_map has # of row = derSec2.row
@@ -91,15 +115,25 @@ namespace TableObject{
             {
                 std::vector<int> match_idx;
                 float similarity = 0;
-                // find the best match similarity for each row of sec1
+                // find the best match similarity for each row of sec2
                 for(int j=0; j<derSec1.row; j++)
                 {
                     if(_ss[j][i]>similarity) similarity = _ss[j][i];
                 }
-                // find all the best matches for each row of sec1
-                for(int j=0; j<derSec1.row; j++)
+                // find all the best matches for each row of sec2
+                if(similarity != 100)
                 {
-                    if(_ss[j][i]==similarity) match_idx.push_back(j);
+                    match_idx.push_back(-1);
+                    add_row_index_sec2.push_back(i);
+                }else{
+                    for(int j=0; j<derSec1.row; j++)
+                    {
+                        if(_ss[j][i]==similarity)
+                        {
+                            match_idx.push_back(j);
+//                             matched_row_index_sec1.push_back(j);
+                        }
+                    }
                 }
                 match_map.push_back(match_idx);
             }
@@ -204,6 +238,7 @@ namespace TableObject{
          // for each permutation, find the similarity matrix
          // permutated_derSec1_seq vs permutated_derSec2_seq
         float best_ts = 0;
+        int best_ts_permutation_idx;
         for(int p=0; p<permutation.size(); p++)
         {
             _ts.clear();
@@ -229,7 +264,7 @@ namespace TableObject{
                     // extract the cols from each newDerSec
                     std::vector<std::string> col1; 
                     std::vector<std::string> col2;
-                    for(int row_i=0; row_i<newDerSec1.row; row_i++) col1.push_back(newDerSec1.event_chain[row_i][j]);
+                    for(int row_i=0; row_i<newDerSec1.row; row_i++) col1.push_back(newDerSec1.event_chain[row_i][i]);
                     for(int row_i=0; row_i<newDerSec2.row; row_i++) col2.push_back(newDerSec2.event_chain[row_i][j]);
                     
                     // calculate the similarity between col1 and col2
@@ -288,12 +323,19 @@ namespace TableObject{
 //             }
             
             // calculate mean temporal similarity
-            ts = ts / LSS.size();
-            if( ts > best_ts) best_ts = ts;
+            ts = ts / std::min(_ts.size(), _ts[0].size());
+            if( ts > best_ts)
+            {
+                best_ts = ts;
+                best_ts_permutation_idx = p;
+            }
             std::cout << "lss temporal simlarity = " << ts << std::endl;
         }
-        
         std::cout << "best temporal similarity = " << best_ts << std::endl;
+        
+        // matched row and col index in sec1
+        matched_row_index_sec1;
+        
         return best_ts;
     }
     

@@ -88,7 +88,7 @@ namespace TableObject
         /** \brief record target object */
         void recordTarget(int cluster_id);
         
-        void computeObjCentroid(std::vector<Eigen::Vector4f>& centroid);
+        void computeObjCentroid(std::vector<Eigen::Vector4f,Eigen::aligned_allocator<Eigen::Vector4f> >& centroid);
         
     private:
         pcdCloud _sceneCloud;

@@ -11,7 +11,7 @@
 
 namespace TableObject{
     
-    void computeObjCentroid(CloudPtr cloud, std::vector<pcl::PointIndices> clusters, std::vector< Eigen::Vector4f >& centroid)
+    void computeObjCentroid(CloudPtr cloud, std::vector<pcl::PointIndices> clusters, std::vector<Eigen::Vector4f,Eigen::aligned_allocator<Eigen::Vector4f> >& centroid)
     {
         for (int i = 0; i < clusters.size(); i++) 
         {  
@@ -40,7 +40,7 @@ namespace TableObject{
         linkerList result;
         
         // compute centroids of input_cloud
-        std::vector<Eigen::Vector4f> centroid;
+        std::vector<Eigen::Vector4f,Eigen::aligned_allocator<Eigen::Vector4f> > centroid;
         computeObjCentroid(input_cloud, input_clusters, centroid);
         
         // cloud_xyz: convert target_cloud to pointXYZ
@@ -312,9 +312,12 @@ namespace TableObject{
         }
         
         CloudPtr hand_cloud(new Cloud);
-        pcl::copyPointCloud(*cloud, clusters[hand], *hand_cloud);
+        if(hand>=0)
+            pcl::copyPointCloud(*cloud, clusters[hand], *hand_cloud);
+        else
+            pcl::copyPointCloud(*cloud, f_indices, *hand_cloud);
         
-        TableObject::touchDetector touchDetector(0.015);
+        TableObject::touchDetector touchDetector(0.02);
         for(int i=0; i<clusters.size(); i++)
         {
             if(i!=hand)

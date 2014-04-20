@@ -207,7 +207,7 @@ namespace TableObject{
     
     void Segmentation::prune()
     {
-        std::vector<Eigen::Vector4f> centroids;
+        std::vector<Eigen::Vector4f,Eigen::aligned_allocator<Eigen::Vector4f> > centroids;
         computeObjCentroid(centroids);
         
         for(int i=_clusters.size()-1; i>=0; i--)
@@ -278,7 +278,7 @@ namespace TableObject{
         writer.write ("target.pcd", *target, false);
     }
     
-    void Segmentation::computeObjCentroid(std::vector<Eigen::Vector4f>& centroid)
+    void Segmentation::computeObjCentroid(std::vector<Eigen::Vector4f,Eigen::aligned_allocator<Eigen::Vector4f> >& centroid)
     {
         TableObject::computeObjCentroid(_cloud_objects, _clusters, centroid);
     }
