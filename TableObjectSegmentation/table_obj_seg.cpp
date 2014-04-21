@@ -118,7 +118,7 @@ namespace TableObject{
         pcl::ExtractPolygonalPrismData<RefPointType> prism;
         prism.setInputCloud(_outPlaneCloud);
         prism.setInputPlanarHull(_cloud_hull);
-        prism.setHeightLimits(0.0, 0.3);
+        prism.setHeightLimits(0.0, 0.5);
         pcl::PointIndices::Ptr output (new pcl::PointIndices);
         prism.segment(*output);
         
@@ -172,7 +172,7 @@ namespace TableObject{
         pcl::ExtractPolygonalPrismData<RefPointType> prism;
         prism.setInputCloud(_outPlaneCloud);
         prism.setInputPlanarHull(_cloud_hull);
-        prism.setHeightLimits(0.0, 0.3);
+        prism.setHeightLimits(0.0, 0.5);
         pcl::PointIndices::Ptr output (new pcl::PointIndices);
         prism.segment(*output);
         

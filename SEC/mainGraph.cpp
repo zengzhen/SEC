@@ -27,8 +27,9 @@ namespace TableObject{
         _cur_graph.push_back(relation);
     }
 
-    void mainGraph::compareRelationGraph(int frame_index)
+    bool mainGraph::compareRelationGraph(int frame_index)
     {
+        bool change = false;
         // print out pre and cur relational graph
         std::cout << "pre relational scene graph: ";
         for(int i=0; i<_pre_graph.size(); i++)
@@ -51,6 +52,7 @@ namespace TableObject{
                 newGraph.video_index = frame_index;
                 newGraph.relational_graph = _cur_graph;
                 _graph.push_back(newGraph);
+                change = true;
                 break;
             }
         }
@@ -58,6 +60,8 @@ namespace TableObject{
         //update previous frame graph to be curreent graph
         _pre_graph = _cur_graph;
         _cur_graph.clear();
+        
+        return change;
     }
 
     std::vector<graph> mainGraph::getMainGraph()

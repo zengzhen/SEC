@@ -31,7 +31,7 @@ namespace TableObject{
         /** Compare relational graphs between frame_index and frame_index-1
          *  \param[in] frame_index the index of the frame to be compared
          */
-        void compareRelationGraph(int frame_index);
+        bool compareRelationGraph(int frame_index);
         
         /** Accessor main graph
          */

@@ -11,6 +11,7 @@ namespace TableObject{
     {
         _sec1 = sec1;
         _sec2 = sec2;
+        _spatial_equal_threshold = 40;
     }
     
     void similarityMeasure::setSpatialThreshold(float spatial_threshold)
@@ -57,7 +58,7 @@ namespace TableObject{
         return ss;
     }
 
-    float similarityMeasure::temporalSimilarity(std::vector<int>& add_row_index_sec2, std::vector<int>& matched_row_index_sec1)
+    float similarityMeasure::temporalSimilarity(std::vector<int>& add_row_index_sec2, std::vector<int>& matched_row_index_sec1, std::vector<int>& matched_col_index_sec1)
     {
         sec derSec1, derSec2;
         _sec1.getDerivativeSec(derSec1);
@@ -79,11 +80,10 @@ namespace TableObject{
                     if(_ss[i][j]>similarity) similarity = _ss[i][j];
                 }
                 // find all the best matches for each row of sec1
-                if(similarity != 100)
+                if(similarity < _spatial_equal_threshold)
                 {
                     match_idx.push_back(-1);
                 }else{
-//                     matched_row_index_sec1.push_back(i);
                     for(int j=0; j<derSec2.row; j++)
                     {
                         if(_ss[i][j]==similarity)
@@ -104,7 +104,7 @@ namespace TableObject{
                     if(_ss[j][i]>similarity) similarity = _ss[j][i];
                 }
                 // find all the best matches for each row of sec1
-                if(similarity != 100)
+                if(similarity < _spatial_equal_threshold)
                 {
                     add_row_index_sec2.push_back(i);
                 }
@@ -121,7 +121,7 @@ namespace TableObject{
                     if(_ss[j][i]>similarity) similarity = _ss[j][i];
                 }
                 // find all the best matches for each row of sec2
-                if(similarity != 100)
+                if(similarity < _spatial_equal_threshold)
                 {
                     match_idx.push_back(-1);
                     add_row_index_sec2.push_back(i);
@@ -131,7 +131,6 @@ namespace TableObject{
                         if(_ss[j][i]==similarity)
                         {
                             match_idx.push_back(j);
-//                             matched_row_index_sec1.push_back(j);
                         }
                     }
                 }
@@ -140,6 +139,7 @@ namespace TableObject{
         }
         
         // display the matching
+        std::cout << "match_map: " << std::endl;
         for(int i=0; i<match_map.size(); i++)
         {
             for(int j=0;j<match_map[i].size(); j++)
@@ -238,7 +238,7 @@ namespace TableObject{
          // for each permutation, find the similarity matrix
          // permutated_derSec1_seq vs permutated_derSec2_seq
         float best_ts = 0;
-        int best_ts_permutation_idx;
+        int best_ts_permutation_idx=-1;
         for(int p=0; p<permutation.size(); p++)
         {
             _ts.clear();
@@ -323,18 +323,58 @@ namespace TableObject{
 //             }
             
             // calculate mean temporal similarity
+//             sec comSec1, comSec2;
+//             _sec1.getCompressedSec(comSec1);
+//             _sec2.getCompressedSec(comSec2);
             ts = ts / std::min(_ts.size(), _ts[0].size());
             if( ts > best_ts)
             {
                 best_ts = ts;
                 best_ts_permutation_idx = p;
+                _best_back_pointers = back_pointers;
             }
             std::cout << "lss temporal simlarity = " << ts << std::endl;
+            ts = ts * std::min(_ts.size(), _ts[0].size()) / std::max(_ts.size(), _ts[0].size());
+            std::cout << "lss temporal simlarity (subactivity?) = " << ts << std::endl;
         }
         std::cout << "best temporal similarity = " << best_ts << std::endl;
         
-        // matched row and col index in sec1
-        matched_row_index_sec1;
+        if(best_ts_permutation_idx != -1)
+        {
+            // matched row index in sec1 (needed in learning stage)
+            if(derSec1.row <= derSec2.row)
+            {
+                for(int i=0; i<permutation[best_ts_permutation_idx].size(); i++)
+                {
+                    if(permutation[best_ts_permutation_idx][i] != -1) matched_row_index_sec1.push_back(i);
+                }
+            }else{
+                for(int i=0; i<permutation[best_ts_permutation_idx].size(); i++)
+                {
+                    if(permutation[best_ts_permutation_idx][i] != -1) matched_row_index_sec1.push_back(permutation[best_ts_permutation_idx][i]);
+                }
+            }
+            
+            // matched col index in sec1 (needed in learning stage)
+            matched_col_index_sec1;
+            int i=_best_back_pointers.size()-1, j=_best_back_pointers[0].size()-1;
+            while(i!=0 & j!=0)
+            {
+                if(std::strcmp(_best_back_pointers[i][j].c_str(), "addxy")==0)
+                {
+                    if(derSec1.row <= derSec2.row)
+                        matched_col_index_sec1.push_back(i-1);
+                    else
+                        matched_col_index_sec1.push_back(j-1);
+                    
+                    i--; j--;
+                }else if(std::strcmp(_best_back_pointers[i][j].c_str(), "skipx")==0){
+                    i--;
+                }else if(std::strcmp(_best_back_pointers[i][j].c_str(), "skipy")==0){
+                    j--;
+                }
+            }
+        }
         
         return best_ts;
     }
@@ -454,7 +494,7 @@ namespace TableObject{
         // check for terminal condition
         if( min_match_num == 1000)
         {
-            permutations.push_back(temp_permutation);
+            if(!temp_permutation.empty()) permutations.push_back(temp_permutation);
             return;
         }
         int min_match_row; // index of the 1st row that has the least # of matches
@@ -505,12 +545,24 @@ namespace TableObject{
             b[0][j]=std::string("skipy");
         }
         
+        // find the max of each row of _ts
+        std::vector<float> ts_row_max;
+        for(int i=0; i<_ts.size(); i++)
+        {
+            float row_max = 0;
+            for(int j=0; j<_ts[i].size(); j++)
+            {
+                if(_ts[i][j] > row_max) row_max = _ts[i][j];
+            }
+            ts_row_max.push_back(row_max);
+        }
+        
         // count for length of lss, and store the back pointers in b
         for(int i=1; i<=_ts.size(); i++)
         {
             for(int j=1; j<=_ts[0].size(); j++)
             {
-                if(_ts[i-1][j-1]==100)
+                if(_ts[i-1][j-1]==ts_row_max[i-1] & ts_row_max[i-1]>0)
                 {
                     c[i][j]=c[i-1][j-1]+1;
                     b[i][j]=std::string("addxy");

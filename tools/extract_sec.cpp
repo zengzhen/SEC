@@ -117,6 +117,7 @@ main (int argc, char** argv)
     ***************************************/
     unsigned int idx = index_start;
     int video_id=0;
+    bool change = false;
     while( idx <= index_end && !result_viewer.wasStopped())
     { 
         std::cout << std::endl;
@@ -245,6 +246,8 @@ main (int argc, char** argv)
             
             // draw extracted plane contour polygon
             result_viewer.addPolygon<RefPointType>(cloud_hull, 0, 255, 0, "polygon");
+            
+            change = true;
         }else
         {            
             /***************************************
@@ -339,7 +342,7 @@ main (int argc, char** argv)
             /***************************************
              *  Main Graph
              ***************************************/
-            mainGraph.compareRelationGraph((int)idx);
+            change = mainGraph.compareRelationGraph((int)idx);
         }       
         
              
@@ -350,10 +353,13 @@ main (int argc, char** argv)
         result_viewer.spinOnce (100);
         boost::this_thread::sleep (boost::posix_time::microseconds (100000));
         
-        char screenshot[50]; // make sure it's big enough
-        std::snprintf(screenshot, sizeof(screenshot), "../../../result/%s/sec_%d.png", demo_name.c_str(), (int)video_id);
-        std::cout << screenshot << std::endl;
-        result_viewer.saveScreenshot(screenshot);
+        if(change)
+        {
+            char screenshot[50]; // make sure it's big enough
+            std::snprintf(screenshot, sizeof(screenshot), "../../../result/%s/sec_%d.png", demo_name.c_str(), (int)video_id);
+            std::cout << screenshot << std::endl;
+            result_viewer.saveScreenshot(screenshot);
+        }
         
         idx=idx+step;
         video_id=video_id+1;

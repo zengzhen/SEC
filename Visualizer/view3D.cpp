@@ -78,10 +78,10 @@ namespace TableObject{
             cluster_id << i; 
 
             // Add the i_th cluster to the visualizer with a random color and a unique identifier 
-            if(!viz.updatePointCloud(cluster_i, color_cloud, cluster_id.str()))
+            if(!viz.updatePointCloud(cluster_i, random_color, cluster_id.str()))
             {
                 
-                viz.addPointCloud(cluster_i, color_cloud, cluster_id.str ()); 
+                viz.addPointCloud(cluster_i, random_color, cluster_id.str ()); 
             }
             
             std::stringstream ss; ss << i;
