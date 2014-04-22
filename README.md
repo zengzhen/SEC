@@ -4,6 +4,7 @@ SEC
  * Learn manipulation action for recognition tasks.
 
 #Usage
+Build the package, and go to BUILD_DIRECTORY/tools/
 1. Run sec extractions on a pre-recorded kinect video,
 
         >> ./extract_sec DATA_PATH/PCD_FILE_FORMAT START_INDEX END_INDEX DEMO_NAME (opt)STEP_SIZE(1)
@@ -14,7 +15,7 @@ SEC
    extracted main graph and video process config are stored in `SEC/result/DEMO_NAME/`
    
    
-2. To browse the corresponding 2D image sequences for a pre-recorded kinect video, first use the kinect toolbox we developed,
+2. To browse the corresponding 2D image sequences for a pre-recorded kinect video, first use the kinect toolbox we developed (not available here),
 
         >> cd KINECT_TOOLBOX_PATH/bin
         >> ./Convert_PCD_video_RGBDs --cloud DATA_PATH/PCD_FILE_FORMAT --depth DATA_PATH/DEPTH_FILE_FORMAT --image DATA_PATH/IMAGE_FILE_FORMAT
@@ -22,7 +23,48 @@ SEC
    eg.
 
         >> ./Convert_PCD_video_RGBDs --cloud ~/Documents/zhen_data/qualManipulation/demo10/pcd/cld%05d.pcd --depth ~/Documents/zhen_data/qualManipulation/demo10/depth/depth%05d.png --image ~/Documents/zhen_data/qualManipulation/demo10/rgb/image%05d.png
+        
+3. Load maingraph file and translate it into SEC, and compute derivatives of SEC and compresssed SEC,
 
+        >> ./testEventChain DEMO_NAME
+   eg.
+
+        >> ./testEventChain push/demo1
+   	
+   the original, derivative and compressed SEC are displayed.
+   
+           
+4. Measure the similarity between two given SECs (load from maingrph file),
+
+        >> ./testSimilarityMeasure DEMO_NAME_1 DEMO_NAME_2
+   eg.
+
+        >> ./testSimilarityMeasure push/demo1 push/demo2
+   	
+   the intermediate and final similarity measure ar displayed.
+   
+           
+5. Load all manipulation classes maingraph file, and calculate the similarity matrix
+
+        >> ./actionClustering DATASET_PATH
+   eg.
+
+        >> ./actionClustering /home/user/Documents/dataset
+   	
+   where the `dataset` is the folder that contains folders of `push`, `pick_up`, `stack`, `stack_unstack`.
+   The simlarity matrix is displayed.
+
+6. Learn a SEC model for a manipulation class
+
+        >> ./actionClassification DATASET_PATH CLASS_NAME (opt)threshold(60)
+   eg.
+
+        >> ./actionClassification /home/user/Documents/dataset push
+   	
+   where the CLASS_NAME could be one of `push`, `pick_up`, `stack`, `stack_unstack`.
+   The threshold corresponds to the threshold above which one consider the two SECs as the same manipulation class.
+   The intermediate results and final learned SEC model is displayed. 
+   
 #Parameters
  * util.cpp/linking parameters: <br /> 
 `search radius around the center`: 0.05 <br /> 
