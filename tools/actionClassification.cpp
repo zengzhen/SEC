@@ -10,7 +10,7 @@ int main(int argc, char** argv)
 {
     if(argc<3 | argc >4)
     {
-        std::cerr << "Usage: ./actionClustering DATASET_PATH CLASS_NAME (opt)threshold(60)" << std::endl;
+        std::cerr << "Usage: ./actionClassification DATASET_PATH CLASS_NAME (opt)threshold(60)" << std::endl;
         std::cerr << "class: push, pick_up, stack, stack_unstack" << std::endl;
         exit(1);
     }
