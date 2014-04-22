@@ -11,7 +11,7 @@ namespace TableObject{
     {
         _sec1 = sec1;
         _sec2 = sec2;
-        _spatial_equal_threshold = 40;
+        _spatial_equal_threshold = 60;
     }
     
     void similarityMeasure::setSpatialThreshold(float spatial_threshold)
@@ -58,7 +58,10 @@ namespace TableObject{
         return ss;
     }
 
-    float similarityMeasure::temporalSimilarity(std::vector<int>& add_row_index_sec2, std::vector<int>& matched_row_index_sec1, std::vector<int>& matched_col_index_sec1)
+    float similarityMeasure::temporalSimilarity(std::vector<int>& add_row_index_sec2, 
+                                                std::vector<int>& matched_row_index_sec1, 
+                                                std::vector<int>& matched_col_index_sec1,
+                                                std::vector<int>& matched_col_index_sec2)
     {
         sec derSec1, derSec2;
         _sec1.getDerivativeSec(derSec1);
@@ -356,16 +359,19 @@ namespace TableObject{
             }
             
             // matched col index in sec1 (needed in learning stage)
-            matched_col_index_sec1;
             int i=_best_back_pointers.size()-1, j=_best_back_pointers[0].size()-1;
             while(i!=0 & j!=0)
             {
                 if(std::strcmp(_best_back_pointers[i][j].c_str(), "addxy")==0)
                 {
                     if(derSec1.row <= derSec2.row)
-                        matched_col_index_sec1.push_back(i-1);
-                    else
-                        matched_col_index_sec1.push_back(j-1);
+                    {
+                        matched_col_index_sec1.push_back(i-1);matched_col_index_sec1.push_back(i);
+                        matched_col_index_sec2.push_back(j-1);matched_col_index_sec2.push_back(j);
+                    }else{
+                        matched_col_index_sec1.push_back(j-1);matched_col_index_sec1.push_back(j);
+                        matched_col_index_sec2.push_back(i-1);matched_col_index_sec2.push_back(i);
+                    }
                     
                     i--; j--;
                 }else if(std::strcmp(_best_back_pointers[i][j].c_str(), "skipx")==0){
@@ -376,7 +382,13 @@ namespace TableObject{
             }
         }
         
-        return best_ts;
+        std::sort(matched_col_index_sec1.begin(), matched_col_index_sec1.end());
+        matched_col_index_sec1.erase(std::unique(matched_col_index_sec1.begin(), matched_col_index_sec1.end()), matched_col_index_sec1.end());
+        
+        std::sort(matched_col_index_sec2.begin(), matched_col_index_sec2.end());
+        matched_col_index_sec2.erase(std::unique(matched_col_index_sec2.begin(), matched_col_index_sec2.end()), matched_col_index_sec2.end());
+        
+        return best_ts/100;
     }
     
     float similarityMeasure::subString(std::vector< std::string> row1, std::vector< std::string> row2, const char* option)
@@ -562,7 +574,8 @@ namespace TableObject{
         {
             for(int j=1; j<=_ts[0].size(); j++)
             {
-                if(_ts[i-1][j-1]==ts_row_max[i-1] & ts_row_max[i-1]>0)
+//                 if(_ts[i-1][j-1]==ts_row_max[i-1] & ts_row_max[i-1]>0)
+                if(_ts[i-1][j-1]>60 & ts_row_max[i-1]>0)
                 {
                     c[i][j]=c[i-1][j-1]+1;
                     b[i][j]=std::string("addxy");

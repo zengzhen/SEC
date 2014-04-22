@@ -57,6 +57,27 @@ namespace TableObject{
             }
             mainGraph.close();
         }
+        
+        // erase rows where nothing happens in semantic event chain
+        for(int i=_original_sec.row-1; i>=0; i--)
+        {
+            bool nothing_happens = true;
+            for(int j=1; j<_original_sec.cols[i]; j++)
+            {
+                char str[80];
+                std::strcpy(str, _original_sec.event_chain[i][j-1].c_str());
+                std::strcat(str, _original_sec.event_chain[i][j].c_str());
+                
+                nothing_happens = (std::strcmp( _original_sec.event_chain[i][j-1].c_str() , _original_sec.event_chain[i][j].c_str() ) == 0) & nothing_happens;
+            }
+            if(nothing_happens)
+            {
+                _original_sec.row = _original_sec.row - 1;
+                _original_sec.cols.erase(_original_sec.cols.begin()+i);
+                _original_sec.event_chain.erase(_original_sec.event_chain.begin()+i);
+            }
+        }
+        
     }
     
     void eventChain::takeDerivative()
@@ -64,7 +85,7 @@ namespace TableObject{
         for(int i=0; i<_original_sec.row; i++)
         {
             std::vector<std::string> sec_row;
-            bool nothing_happens = true;
+//             bool nothing_happens = true;
             for(int j=1; j<_original_sec.cols[i]; j++)
             {
                 char str[80];
@@ -72,9 +93,9 @@ namespace TableObject{
                 std::strcat(str, _original_sec.event_chain[i][j].c_str());
                 sec_row.push_back(std::string(str));
                 
-                nothing_happens = (std::strcmp( _original_sec.event_chain[i][j-1].c_str() , _original_sec.event_chain[i][j].c_str() ) == 0) & nothing_happens;
+//                 nothing_happens = (std::strcmp( _original_sec.event_chain[i][j-1].c_str() , _original_sec.event_chain[i][j].c_str() ) == 0) & nothing_happens;
             }
-            if(!nothing_happens)
+//             if(!nothing_happens)
             {
                 _derivative_sec.event_chain.push_back(sec_row);
                 _derivative_sec.row = _derivative_sec.row + 1;
@@ -107,6 +128,11 @@ namespace TableObject{
         }
     }
     
+    void eventChain::getOriginalSec(sec& original_sec)
+    {
+        original_sec = _original_sec;
+    }
+    
     void eventChain::getDerivativeSec(sec& derivative_sec)
     {
         derivative_sec = _derivative_sec;
@@ -115,6 +141,11 @@ namespace TableObject{
     void eventChain::getCompressedSec(sec& compressed_sec)
     {
         compressed_sec = _compressed_sec;
+    }
+    
+    void eventChain::setOriginalSec(sec& sec)
+    {
+        _original_sec = sec;
     }
     
     void eventChain::display(const char* sec_type)

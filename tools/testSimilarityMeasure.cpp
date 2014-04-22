@@ -44,10 +44,11 @@ int main(int argc, char** argv)
     std::vector<int> add_row_index_sec2;
     std::vector<int> matched_row_index_sec1;
     std::vector<int> matched_col_index_sec1;
+    std::vector<int> matched_col_index_sec2;
     sm.setSpatialThreshold(0.8f);
     sm.spatialSimilarity();
     sm.setTemporalThreshold(0.8f);
-    sm.temporalSimilarity(add_row_index_sec2, matched_row_index_sec1, matched_col_index_sec1);
+    sm.temporalSimilarity(add_row_index_sec2, matched_row_index_sec1, matched_col_index_sec1, matched_col_index_sec2);
     
     // display results
     std::cout << "add_row_index_sec2:";

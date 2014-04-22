@@ -42,8 +42,14 @@ namespace TableObject{
         
         /** \brief temporal similarity between two semantic event chains given while construction
          *  \param[out] add_row_index_sec2 while learning, if there are new rows occurred in sec2, store the index for the rows to be added to the model
+         *  \param[out] matched_row_index_sec1 matched row index in sec1
+         *  \param[out] matched_col_index_sec1 matched col index in sec1
+         *  \param[out] matched_col_index_sec2 matched col index in sec2
         */
-        float temporalSimilarity(std::vector<int>& add_row_index_sec2, std::vector<int>& matched_row_index_sec1, std::vector<int>& matched_col_index_sec1);
+        float temporalSimilarity(std::vector<int>& add_row_index_sec2, 
+                                 std::vector<int>& matched_row_index_sec1, 
+                                 std::vector<int>& matched_col_index_sec1,
+                                 std::vector<int>& matched_col_index_sec2);
         
     private:
         eventChain _sec1;

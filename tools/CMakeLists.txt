@@ -35,3 +35,13 @@ add_executable (testSimilarityMeasure testSimilarityMeasure.cpp)
 target_link_libraries (testSimilarityMeasure
                        similarityMeasure
                        eventChain)
+                       
+add_executable (actionClustering actionClustering.cpp)
+target_link_libraries (actionClustering
+                       similarityMeasure
+                       eventChain)
+                       
+add_executable (actionClassification actionClassification.cpp)
+target_link_libraries (actionClassification
+                       similarityMeasure
+                       eventChain)

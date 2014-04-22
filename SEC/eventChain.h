@@ -35,6 +35,11 @@ namespace TableObject{
         void compress();
         
         /** \brief Accessor
+         *  \param[in] original_sec
+        */
+        void getOriginalSec(sec& original_sec);
+        
+        /** \brief Accessor
          *  \param[in] derivative_sec
         */
         void getDerivativeSec(sec& derivative_sec);
@@ -43,6 +48,12 @@ namespace TableObject{
          *  \param[in] compressed_sec
         */
         void getCompressedSec(sec& compressed_sec);
+        
+        /** \brief Setter
+         *  \param[in] sec
+        */
+        void setOriginalSec(sec& sec);
+        
         
         /** \brief display event chains
          *  \param[in] sec_type the type of the event chain to be displayed ("all","original","derivative","compressed")
