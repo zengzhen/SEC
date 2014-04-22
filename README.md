@@ -55,7 +55,7 @@ Build the package, and go to BUILD_DIRECTORY/tools/ <br />
    where the `dataset` is the folder that contains folders of `push`, `pick_up`, `stack`, `stack_unstack`. <br /> 
    The simlarity matrix is displayed.
 
-6. Learn a SEC model for a manipulation class
+6. Learn an SEC model for a manipulation class
 
         >> ./actionClassification DATASET_PATH CLASS_NAME (opt)threshold(60)
    eg.
