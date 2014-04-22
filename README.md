@@ -52,7 +52,7 @@ Build the package, and go to BUILD_DIRECTORY/tools/ <br />
 
         >> ./actionClustering /home/user/Documents/dataset
    	
-   where the `dataset` is the folder that contains folders of `push`, `pick_up`, `stack`, `stack_unstack`.
+   where the `dataset` is the folder that contains folders of `push`, `pick_up`, `stack`, `stack_unstack`. <br /> 
    The simlarity matrix is displayed.
 
 6. Learn a SEC model for a manipulation class
@@ -62,8 +62,8 @@ Build the package, and go to BUILD_DIRECTORY/tools/ <br />
 
         >> ./actionClassification /home/user/Documents/dataset push
    	
-   where the CLASS_NAME could be one of `push`, `pick_up`, `stack`, `stack_unstack`.
-   The threshold corresponds to the threshold above which one consider the two SECs as the same manipulation class.
+   where the CLASS_NAME could be one of `push`, `pick_up`, `stack`, `stack_unstack`. <br /> 
+   The threshold corresponds to the threshold above which one consider the two SECs as the same manipulation class. <br /> 
    The intermediate results and final learned SEC model is displayed. 
    
 #Parameters
