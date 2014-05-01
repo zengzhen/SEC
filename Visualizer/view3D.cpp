@@ -84,9 +84,9 @@ namespace TableObject{
                 viz.addPointCloud(cluster_i, random_color, cluster_id.str ()); 
             }
             
-            std::stringstream ss; ss << i;
-            viz.removeText3D(ss.str());
-            viz.addText3D(ss.str(), cloud->points.at(clusters[i].indices[0]),0.1);
+//             std::stringstream ss; ss << i;
+//             viz.removeText3D(ss.str());
+//             viz.addText3D(ss.str(), cloud->points.at(clusters[i].indices[0]),0.1);
         } 
     }
 
@@ -105,9 +105,9 @@ namespace TableObject{
             
             if(i==clusters.size()-1 or i==clusters.size()-2) viz.removePointCloud(cluster_id.str());
             
-            std::stringstream ss; ss << i;
-            viz.removeText3D(ss.str());
-            viz.addText3D(ss.str(), cloud->points.at(clusters[i].indices[0]),0.1);
+//             std::stringstream ss; ss << i;
+//             viz.removeText3D(ss.str());
+//             viz.addText3D(ss.str(), cloud->points.at(clusters[i].indices[0]),0.1);
         } 
     }
 

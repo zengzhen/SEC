@@ -7,7 +7,6 @@
 #ifndef VIEW2D_H
 #define VIEW2D_H
 
-#include <cv.h>
 #include <pcl/point_cloud.h>
 #include "Kinect/src/image/convert_rgbd_to_image.h"
 

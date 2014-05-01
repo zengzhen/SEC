@@ -240,9 +240,9 @@ main (int argc, char** argv)
             // draw extracted plane points
 //             pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGBA> plane(planeCloud);
 //             result_viewer.addPointCloud<RefPointType>(planeCloud, plane, "tabletop");
-            std::stringstream ss; 
-            ss << (int)touch_clusters.size();
-            result_viewer.addText3D(ss.str(), planeCloud->points.at(334*640+78),0.1);
+//             std::stringstream ss; 
+//             ss << (int)touch_clusters.size();
+//             result_viewer.addText3D(ss.str(), planeCloud->points.at(334*640+78),0.1);
             
             // draw extracted plane contour polygon
             result_viewer.addPolygon<RefPointType>(cloud_hull, 0, 255, 0, "polygon");

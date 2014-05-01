@@ -4,7 +4,7 @@ SET( CMAKE_CXX_FLAGS_RELEASE "-std=gnu++0x -fPIC -O3" CACHE STRING "" FORCE )
 SET( CMAKE_CXX_FLAGS_DEBUG "-g -std=gnu++0x -fPIC -ggdb3" CACHE STRING "" FORCE )
 
 project(sec)
-add_subdirectory (TableObjectSegmentation) 
+add_subdirectory (TableObjectSegmentation)
 add_subdirectory(Tracker)
 add_subdirectory(Visualizer)
 add_subdirectory(util)

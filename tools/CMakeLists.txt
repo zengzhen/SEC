@@ -45,3 +45,19 @@ add_executable (actionClassification actionClassification.cpp)
 target_link_libraries (actionClassification
                        similarityMeasure
                        eventChain)
+                       
+add_executable (display_pcd display_pcd.cpp)
+target_link_libraries (display_pcd
+                       ${PCL_LIBRARIES} 
+                       ${OpenCV_LIBS}
+                       /home/zhen/Documents/Kinect/lib/libconvert_rgbd_to_image.so
+                       table_obj_seg
+                       pcd_cloud
+                       trackRigid
+                       view2D
+                       view3D
+                       util
+                       colorDetector
+                       touchDetecor
+                       moveDetector
+                       mainGraph)

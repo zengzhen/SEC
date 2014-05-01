@@ -72,7 +72,7 @@ namespace TableObject{
         std::vector<std::vector<int>> match_map;
         if(derSec1.row <= derSec2.row)
         {
-            // match_map has # of row = derSec1.row
+            // match_map has # of row = # good permutations of the event chain with more rows
             for(int i=0; i<derSec1.row; i++)
             {
                 std::vector<int> match_idx;
@@ -83,10 +83,10 @@ namespace TableObject{
                     if(_ss[i][j]>similarity) similarity = _ss[i][j];
                 }
                 // find all the best matches for each row of sec1
-                if(similarity < _spatial_equal_threshold)
+                /*if(similarity < _spatial_equal_threshold)
                 {
                     match_idx.push_back(-1);
-                }else{
+                }else*/{
                     for(int j=0; j<derSec2.row; j++)
                     {
                         if(_ss[i][j]==similarity)
@@ -113,7 +113,7 @@ namespace TableObject{
                 }
             }
         }else{
-            // match_map has # of row = derSec2.row
+            // match_map has # of row = # of good permutations of the event chain with more rows
             for(int i=0; i<derSec2.row; i++)
             {
                 std::vector<int> match_idx;
@@ -124,11 +124,11 @@ namespace TableObject{
                     if(_ss[j][i]>similarity) similarity = _ss[j][i];
                 }
                 // find all the best matches for each row of sec2
-                if(similarity < _spatial_equal_threshold)
+                /*if(similarity < _spatial_equal_threshold)
                 {
                     match_idx.push_back(-1);
                     add_row_index_sec2.push_back(i);
-                }else{
+                }else*/{
                     for(int j=0; j<derSec1.row; j++)
                     {
                         if(_ss[j][i]==similarity)
@@ -165,7 +165,70 @@ namespace TableObject{
         permute(match_map, permutation, temp_permutation);
         
         // display permutations
-        std::cout << "permutations: " << std::endl;
+        std::cout << "before completion, permutations: " << std::endl;
+        for(int i=0; i<permutation.size(); i++)
+        {
+            for(int j=0; j<permutation[i].size(); j++)
+            {
+                std::cout << permutation[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+        
+        // complete the permutation
+        int max_row_num = std::max(derSec1.row, derSec2.row);
+        std::vector<int> rows_to_be_removed;
+        int size_before_complete = permutation.size();
+        for(int i=0; i<size_before_complete; i++)
+        {
+            std::vector<bool> check_permutation(max_row_num, false);
+            for(int j=0;j<permutation[i].size(); j++)
+            {
+                if(permutation[i][j] != -1) check_permutation[permutation[i][j]]=true;
+            }
+            std::vector<int> rows_to_be_shuffled;
+            for(int j=0; j<max_row_num; j++)
+            {
+                if(!check_permutation[j]) rows_to_be_shuffled.push_back(j);
+            }
+            
+            if(rows_to_be_shuffled.size()>0)
+            {
+                std::sort (rows_to_be_shuffled.begin(),rows_to_be_shuffled.begin()+rows_to_be_shuffled.size());
+                std::reverse (rows_to_be_shuffled.begin(),rows_to_be_shuffled.begin()+rows_to_be_shuffled.size());
+                rows_to_be_removed.push_back(i);
+                do {
+//                     for(int j=0; j<rows_to_be_shuffled.size(); j++) std::cout << rows_to_be_shuffled[j] << " ";
+//                     std::cout << std::endl;
+                    
+                    std::vector<int> one_shuffle;
+                    for(int j=0; j<rows_to_be_shuffled.size(); j++) one_shuffle.push_back(rows_to_be_shuffled[j]);
+                    // fill -1 in permutation row first, then append with rest of the shuffle
+                    std::vector<int> one_permutation;
+                    int count = 0;
+                    for(int j=0;j<permutation[i].size(); j++)
+                    {
+                        if(permutation[i][j]==-1) 
+                        {
+                            one_permutation.push_back(one_shuffle[count]);
+                            count = count + 1;
+                        }else{
+                            one_permutation.push_back(permutation[i][j]);
+                        }
+                    }
+                    for(int j=count;j<one_shuffle.size(); j++) one_permutation.push_back(one_shuffle[j]);
+                    permutation.push_back(one_permutation);
+                    
+                } while ( std::prev_permutation(rows_to_be_shuffled.begin(),rows_to_be_shuffled.begin()+rows_to_be_shuffled.size()) );
+            }
+        }
+        for(int i=rows_to_be_removed.size()-1; i>=0; i--)
+        {
+            permutation.erase(permutation.begin()+rows_to_be_removed[i]);
+        }
+        
+        // display permutations
+        std::cout << "after completion, permutations: " << std::endl;
         for(int i=0; i<permutation.size(); i++)
         {
             for(int j=0; j<permutation[i].size(); j++)
@@ -430,11 +493,12 @@ namespace TableObject{
             }
         }else if(std::strcmp(option, "temporal")==0)
         {
-            if(f >= _temporal_threshold)
+            /*if(f >= _temporal_threshold)
             {
                 f=100;
                 std::cout << "->" << f << " ";
-            }else{
+            }else*/
+            {
                 std::cout << " ";
             }
         }
@@ -574,8 +638,8 @@ namespace TableObject{
         {
             for(int j=1; j<=_ts[0].size(); j++)
             {
-//                 if(_ts[i-1][j-1]==ts_row_max[i-1] & ts_row_max[i-1]>0)
-                if(_ts[i-1][j-1]>60 & ts_row_max[i-1]>0)
+//                 if(_ts[i-1][j-1]>60 & ts_row_max[i-1]>0)
+                if(_ts[i-1][j-1]==ts_row_max[i-1] & ts_row_max[i-1]>0)
                 {
                     c[i][j]=c[i-1][j-1]+1;
                     b[i][j]=std::string("addxy");
